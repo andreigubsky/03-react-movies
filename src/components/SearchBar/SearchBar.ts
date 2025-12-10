@@ -1,21 +1,37 @@
 import styles from './SearchBar.module.css';
 
-export default function SearchBar({ onSubmit }) {
+
+//Якщо під час натискання кнопки відправки форми текстове поле порожнє, 
+// покажіть користувачеві сповіщення про те, що необхідно 
+// ввести текст для пошуку зображень.
+toast.error('Please enter your search query.');
+
+interface SearchBarProps {
+    onSubmit: () => {};
+}
+
+export default function SearchBar({ onSubmit: SearchBarProps }) {
+    const [inputValue, setInputValue] = useState('');
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        console.log('Form submitted with value:', inputValue);
+    };
     return (
-        <>
         <header className= { styles.header } >
         <div className={ styles.container }>
             <a
-      className={ styles.link }
+          className={ styles.link }
     href = "https://www.themoviedb.org/"
     target = "_blank"
     rel = "noopener noreferrer"
         >
         Powered by TMDB
             </a>
+
             < form className = { styles.form } >
                 <input
-        className={ styles.input }
+            className={ styles.input }
     type = "text"
     name = "query"
     autoComplete = "off"
@@ -28,6 +44,5 @@ export default function SearchBar({ onSubmit }) {
             </form>
             </div>
             </header>
-            </>
   );
 }
