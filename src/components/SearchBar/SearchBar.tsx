@@ -20,8 +20,7 @@ export default function SearchBar({ onSubmit: SearchBarProps }) {
     return (
         <header className= { styles.header } >
         <div className={ styles.container }>
-            <a
-          className={ styles.link }
+            <a className={ styles.link }
     href = "https://www.themoviedb.org/"
     target = "_blank"
     rel = "noopener noreferrer"

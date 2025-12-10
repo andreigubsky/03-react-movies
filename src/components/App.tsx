@@ -1,9 +1,12 @@
-import './App.css';
+import './App.module.css';
 import SearchBar from './SearchBar/SearchBar';
 import fetchMovies from '../services/movieService';
 import MovieGrid from './MovieGrid/MovieGrid';
-
+import toast, { Toaster } from 'react-hot-toast';
 //Якщо в результаті запиту масив фільмів порожній, виводьте повідомлення:
+
+
+const notify = () => toast('Here is your toast.');
 toast.error('No movies found for your request.');
 
 async function getMovies() {
@@ -14,11 +17,11 @@ async function getMovies() {
 function App() {
   return (
     <>
-      <SearchBar omSubmit={handleSubmit} />
-      <MovieGrid />
+      <SearchBar onSubmit={getMovies} />
+      {/* <MovieGrid />
       <Loader />
       <ErrorMessage />
-      <MovieModal />
+      <MovieModal /> */}
     </>
   );
 }
