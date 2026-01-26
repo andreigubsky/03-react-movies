@@ -11,23 +11,15 @@ interface SearchBarProps {
 }
 
 export default function SearchBar({ onSubmit }: SearchBarProps) {
-  // const [inputValue, setInputValue] = useState('');
+  const handleSearch = (formData: FormData) => {
+    const query = formData.get('query') as string;
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const form = event.currentTarget;
-    const input = form.elements.namedItem('query') as HTMLInputElement;
-    const value = input.value.trim();
-
-    if (value === '') {
-      //Якщо під час натискання кнопки відправки форми текстове поле порожнє, покажіть користувачеві сповіщення про те, що необхідно ввести текст для пошуку зображень.
-      toast.error('Please enter your search query.');
+    if (query.trim() === '') {
+      toast.error('Please enter a search term!');
       return;
     }
 
-    onSubmit(value);
-    // form.reset();
+    onSubmit(query.trim());
   };
   return (
     <header className={styles.header}>
@@ -41,7 +33,7 @@ export default function SearchBar({ onSubmit }: SearchBarProps) {
           Powered by TMDB
         </a>
 
-        <form className={styles.form} onSubmit={handleSubmit}>
+        <form className={styles.form} action={handleSearch}>
           <input
             className={styles.input}
             type="text"
