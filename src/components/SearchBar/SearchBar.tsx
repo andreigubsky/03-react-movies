@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import toast from 'react-hot-toast';
 import styles from './SearchBar.module.css';
 
 //Якщо під час натискання кнопки відправки форми текстове поле порожнє,
@@ -7,16 +7,27 @@ import styles from './SearchBar.module.css';
 // toast.error('Please enter your search query.');
 
 interface SearchBarProps {
-  onSubmit: () => {};
+  onSubmit: (query: string) => void;
 }
 
-export default function SearchBar({ onSubmit: SearchBarProps }) {
+export default function SearchBar({ onSubmit }: SearchBarProps) {
   // const [inputValue, setInputValue] = useState('');
 
-  // const handleSubmit = (event) => {
-  //     event.preventDefault();
-  //     console.log('Form submitted with value:', inputValue);
-  // };
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const form = event.currentTarget;
+    const input = form.elements.namedItem('query') as HTMLInputElement;
+    const value = input.value.trim();
+
+    if (value === '') {
+      toast.error('Please enter your search query.');
+      return;
+    }
+
+    onSubmit(value);
+    // form.reset(); // По желанию: очистить поле после поиска
+  };
   return (
     <header className={styles.header}>
       <div className={styles.container}>
@@ -29,7 +40,7 @@ export default function SearchBar({ onSubmit: SearchBarProps }) {
           Powered by TMDB
         </a>
 
-        <form className={styles.form}>
+        <form className={styles.form} onSubmit={handleSubmit}>
           <input
             className={styles.input}
             type="text"

@@ -1,41 +1,52 @@
 import './App.module.css';
 import SearchBar from './SearchBar/SearchBar';
-import MovieGrid from './MovieGrid/MovieGrid.tsч';
+import MovieGrid from './MovieGrid/MovieGrid';
 import MovieModal from './MovieModal/MovieModal';
 import Loader from './Loader/Loader';
 import ErrorMessage from './ErrorMessage/ErrorMessage';
-
 import fetchMovies from '../services/movieService';
 import toast, { Toaster } from 'react-hot-toast';
-
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import type { Movie } from '../types/movie';
-//Якщо в результаті запиту масив фільмів порожній, виводьте повідомлення:
-
-// const notify = () => toast('Here is your toast.');
-// toast.error('No movies found for your request.');
-
-// async function getMovies() {
-//   const res = await fetchMovies('/movie/popular');
-//   return res.data.results;
-// }
 
 function App() {
   const [movies, setMovies] = useState<Movie[]>([]);
-  const [isError, setIsError] = useState(false);
+  const [query, setQuery] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+
+  useEffect(() => {
+    if (!query) return;
+
+    const loadData = async () => {
+      try {
+        setIsLoading(true);
+        const data = await fetchMovies(query);
+        console.log(data); // Посмотри в консоль: это массив [] или объект {}?
+        setMovies(Array.isArray(data) ? data : data.results || []);
+        setMovies(data);
+      } catch (error) {
+        toast.error('Please enter your search query.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
+  }, [query]);
+
+  const handleSearch = (newQuery: string) => {
+    setMovies([]);
+    setQuery(newQuery);
+  };
 
   return (
     <>
-      <SearchBar
-        onSubmit={e => {
-          console.log(e);
-        }}
-      />
-      <MovieGrid movies={movies} onSelect={movie => console.log(movie)} />
-      {/* <MovieModal /> */}
+      <SearchBar onSubmit={handleSearch} />
+      <MovieGrid movies={movies} onSelect={movies => console.log(movies)} />
       {/* {isLoading && <Loader />} */}
+      <Toaster />
+      {/* <MovieModal /> */}
       {/* {isError && <ErrorMessage />} */}
     </>
   );
