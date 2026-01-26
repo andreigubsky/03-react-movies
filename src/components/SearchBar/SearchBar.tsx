@@ -21,12 +21,13 @@ export default function SearchBar({ onSubmit }: SearchBarProps) {
     const value = input.value.trim();
 
     if (value === '') {
+      //Якщо під час натискання кнопки відправки форми текстове поле порожнє, покажіть користувачеві сповіщення про те, що необхідно ввести текст для пошуку зображень.
       toast.error('Please enter your search query.');
       return;
     }
 
     onSubmit(value);
-    // form.reset(); // По желанию: очистить поле после поиска
+    // form.reset();
   };
   return (
     <header className={styles.header}>

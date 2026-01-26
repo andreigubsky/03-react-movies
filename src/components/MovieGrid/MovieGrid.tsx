@@ -1,4 +1,4 @@
-//Галерея повинна рендеритися лише тоді, 
+//Галерея повинна рендеритися лише тоді,
 // коли є які-небудь завантажені фільми.
 
 import css from './MovieGrid.module.css';
@@ -10,7 +10,7 @@ interface MovieGridProps {
 }
 
 export default function MovieGrid({ movies, onSelect }: MovieGridProps) {
-  // Галерея рендерится только если есть фильмы
+  //Г алерея повинна рендеритися лише тоді, коли є які-небудь завантажені фільми.
   if (movies.length === 0) return null;
 
   return (
@@ -31,4 +31,3 @@ export default function MovieGrid({ movies, onSelect }: MovieGridProps) {
     </ul>
   );
 }
-

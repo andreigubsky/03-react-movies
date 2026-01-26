@@ -14,6 +14,7 @@ function App() {
   const [query, setQuery] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
 
   useEffect(() => {
     if (!query) return;
@@ -21,12 +22,21 @@ function App() {
     const loadData = async () => {
       try {
         setIsLoading(true);
+        setIsError(false);
         const data = await fetchMovies(query);
-        console.log(data); // Посмотри в консоль: это массив [] или объект {}?
-        setMovies(Array.isArray(data) ? data : data.results || []);
+        console.log(data);
+        // Посмотри в консоль: это массив [] или объект {}?
+        // setMovies(Array.isArray(data) ? data : data.results || []);
         setMovies(data);
+        if (data.length === 0) {
+          //Якщо в результаті запиту масив фільмів порожній
+          toast.error('No movies found for your request.');
+          setMovies([]);
+          return;
+        }
       } catch (error) {
-        toast.error('Please enter your search query.');
+        setIsError(true);
+        toast.error('Щось пішло не так');
       } finally {
         setIsLoading(false);
       }
@@ -36,18 +46,24 @@ function App() {
   }, [query]);
 
   const handleSearch = (newQuery: string) => {
+    //При кожному новому пошуку колекція фільмів з попереднього пошуку повинна очищатись.
     setMovies([]);
     setQuery(newQuery);
   };
+  const openModal = (movie: Movie) => setSelectedMovie(movie);
+  const closeModal = () => setSelectedMovie(null);
 
   return (
     <>
       <SearchBar onSubmit={handleSearch} />
-      <MovieGrid movies={movies} onSelect={movies => console.log(movies)} />
-      {/* {isLoading && <Loader />} */}
-      <Toaster />
-      {/* <MovieModal /> */}
-      {/* {isError && <ErrorMessage />} */}
+
+      {isError && <ErrorMessage />}
+      {isLoading && !isError && <Loader />}
+      {!isLoading && !isError && movies.length > 0 && (
+        <MovieGrid movies={movies} onSelect={openModal} />
+      )}
+      {selectedMovie && <MovieModal movie={selectedMovie} onClose={closeModal} />}
+      <Toaster position="top-right" />
     </>
   );
 }
