@@ -1,5 +1,9 @@
 import css from "./MovieModal.module.css";
 
+interface MovieModalProps{
+
+}
+
 export default function MovieModal(){
     return(
         <div className={css.backdrop} role="dialog" aria-modal="true">
